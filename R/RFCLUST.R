@@ -56,7 +56,7 @@ rfclust <- function(X, ntrees = 500, K = 2, mtry = 1, ncores = parallel::detectC
   }
 
   if(is.null(rownames(X))){
-    X <- as.character(1:nrow(X))
+    rownames(X) <- as.character(1:nrow(X))
     message("No rownames for `X`. using row number instead.")
   }
 
