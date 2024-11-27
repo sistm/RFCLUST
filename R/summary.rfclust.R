@@ -22,7 +22,7 @@ summary.rfclust <- function(object, ...){
   similarity_matrix <- sum_asso / pair_appearances
 
   # Diag must be 1
-  diag(sum_asso) <- 1
+  diag(similarity_matrix) <- 1
 
   output_summary <- list("similarity_matrix" = similarity_matrix)
   class(output_summary) <- "rfclust.summary"
