@@ -9,13 +9,11 @@
 #' @importFrom stats as.hclust complete.cases cutree
 #' @export
 
-
-
 plot.rfclust.summary <- function(x, ...){
 
   my_palette <- colorRampPalette(c("lightyellow1", "yellow",'orange2','red3', "red4"))(n = 299)
 
-  map <- heatmap.2(as.matrix(x$similarity_matrix),
+  map <- heatmap.2(1-x$distance_matrix,
                    trace = "none",
                    symkey = F,
                    symm = T,

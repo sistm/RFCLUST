@@ -19,7 +19,7 @@ summary.rfclust <- function(object, ...){
   matrices_dist <- lapply(object,'[[',2)
   sum_dist <- Reduce('+', matrices_dist)
 
-  matrices_absent <- lapply(forest,'[[',3)
+  matrices_absent <- lapply(object,'[[',3)
   sum_absent <- Reduce('+', matrices_absent)
 
   if(object[[1]]$distance == "co-clustering"){
@@ -29,7 +29,7 @@ summary.rfclust <- function(object, ...){
     distance_matrix <- 1 - similarity_matrix
 
   }else if(object[[1]]$distance == "inertia"){
-    sum_present <- ntrees_value - sum_absent
+    sum_present <- ntrees - sum_absent
     distance_matrix <- sum_dist / sum_present
   }
 
