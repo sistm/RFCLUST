@@ -2,20 +2,21 @@
 % Please edit documentation in R/tree.R
 \name{tree}
 \alias{tree}
-\title{Fonction tree DIV}
+\title{Computes a divclust tree}
 \usage{
-tree(X, K, mtry)
+tree(X, mtry = ncol(X), distance = c("co-clustering"))
 }
 \arguments{
-\item{X}{le jeu de donnée nétoyée ( QUANTI)}
+\item{X}{data.frame of input data}
 
-\item{K}{le nombre de cluster attendu par Divclust.}
+\item{mtry}{number of variables selected at the beginning (hopefully later at each nodes)}
 
-\item{mtry}{le nombre de variables prises en comptes}
+\item{distance}{a character string, either "co-clustering" or "inertia"}
 }
 \value{
-Matrices de similarité, dissimilarité et absentence.
+dissimilarity matrix and oob matrix
 }
 \description{
-Construit l'tree divclust et l'analyse
+Computes a divisive monothetic tree from the divclust package using either
+co-clustering or inertia distances
 }

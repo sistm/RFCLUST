@@ -1,8 +1,6 @@
-
-
-#' Fonction générale
+#' Unsupervised Random Forest for clustering
 #'
-#' Lie les fonctions ensemble j'espère mdr
+#' main wrapper
 #'
 #' @param X a data.frame to be clustered
 #' @param ntrees number of \code{divlust} tress. Default is \code{500}.
