@@ -46,9 +46,10 @@
 #'    plot(s)
 #' }
 
-rfclust <- function(X, ntrees = 500, K = 2, mtry = 1, ncores = parallel::detectCores()-1){
+rfclust <- function(X, ntrees = 500, mtry = ncol(X), distance = "co-clustering", ncores = parallel::detectCores()-1){
 
   stopifnot(is.data.frame(X))
+  stopifnot(distance %in% c("co-clustering", "inertia"))
 
   if(tibble::is_tibble(X)){
     X <- as.data.frame(X)
@@ -61,11 +62,11 @@ rfclust <- function(X, ntrees = 500, K = 2, mtry = 1, ncores = parallel::detectC
   }
 
   forest <- pblapply(1:ntrees, function(i){
-    tree(X, K, mtry)
+    tree(X, mtry, distance)
   }, cl = ncores)
 
   class(forest) <- "rfclust"
-  message("We advise you do use the `summary()` on this object to agregate the result of this forest, before plotting the summary itself.")
+  #message("We advise you do use the `summary()` on this object to agregate the result of this forest, before plotting the summary itself.")
 
   return(forest)
 }

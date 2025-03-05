@@ -1,18 +1,22 @@
 
 
-#' Fonction tree DIV
+#' Computes a divclust tree
 #'
-#' Construit l'tree divclust et l'analyse
+#' Computes a divisive monothetic tree from the divclust package using either
+#' co-clustering or inertia distances
 #'
-#' @param X le jeu de donnée nétoyée ( QUANTI)
-#' @param K le nombre de cluster attendu par Divclust.
-#' @param mtry le nombre de variables prises en comptes
-#' @return Matrices de similarité, dissimilarité et absentence.
+#' @param X data.frame of input data
+#' @param mtry number of variables selected at the beginning (hopefully later at each nodes)
+#' @param distance a character string, either "co-clustering" or "inertia"
+#' @return dissimilarity matrix and oob matrix
 #' @import dplyr pbapply divclust progress
 #' @export
 
 
-tree <- function(X, K, mtry){
+tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
+
+
+  stopifnot(distance %in% c("co-clustering", "inertia"))
 
   cut_var <- sample(1:ncol(X), size = mtry)
   #variable sample
@@ -26,43 +30,101 @@ tree <- function(X, K, mtry){
   X_ib <- Xtree[index_boot, , drop=FALSE]
   #rownames(X_ib) <- make.unique(rn[index_boot])
 
-  # divclust tree on in-bag bootstrap sample
-  div <- divclust(X_ib, K)
+  tree_max <- divclust(X_ib)
 
+  #Extraction de kmax et de la variation d'inertie
+  tree_kmax <- tree_max$kmax
+  B_diff <- tree_max$height #car B(k+1) - B(k) = W(k) - W(k+1)
 
-  #Initialisation des matrices de stockages
-  occu <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
+  #Matrice d'absence
   absent <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
-
-  #We specify each unique individual for each of our clusters
-  clus_indiv_unik <- sapply(div$clusters,
-                            function(x){
-                              unique(sapply(strsplit(x, ".", fixed = TRUE), "[", 1))
-                            }
-  )
-
-  # Co-clustering occurences in each cluster
-  for(k in 1:K){
-    for(i in clus_indiv_unik[k]){
-      for(j in clus_indiv_unik[k]){
-        occu[i,j] <- 1
-
-      }
-    }
-
-  }
-
-  # We look at the OOBs to signify absences.
-  # All pairs associated with the individual who is OOB are therefore absent.
   absent[oob, ] <-  1
   absent[, oob] <-  1
 
-  # With absences and associations, easy to see dissociated pairs.
-  diss <-  1 - absent - occu
+  if (distance == "inertia"){
+    #Initialisation des matrices de stockages
+    dist <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
 
+    #Création de l'abre avec la profondeur de kmax/2
+    nombre_clusters <- floor(tree_kmax/2)
+    tree_opti <- cutreediv(tree_max, K = nombre_clusters)
+
+    #Extraction des différents clusters
+    clus_indiv_unik <- sapply(tree_opti$clusters,
+                              function(x){
+                                unique(sapply(strsplit(x, ".", fixed = TRUE), "[", 1))
+                              }
+    )
+
+    #Distance entre chaque cluster
+    W_init <- tree_opti$T
+    rnc <- names(tree_opti$description)
+    dist_clusters <- matrix(0, length(tree_opti$clusters), length(tree_opti$clusters), dimnames = list(rnc, rnc))
+    for (cluster_i in rnc){
+      for (cluster_j in rnc){
+        if (cluster_i == cluster_j) {
+          dist_clusters[cluster_i, cluster_j] <-0  # Distance intra-cluster
+        } else {
+          list_inter <- list()
+          list_inter <- tree_opti[["height"]][[cluster_i]][tree_opti[["height"]][[cluster_i]] %in% tree_opti[["height"]][[cluster_j]]]
+          min_val <- min(list_inter)
+          min_index <- which(B_diff == min_val)[1]
+          if (length(min_index) == 0 || min_index == 1) {
+            somme_B_diff <- 0
+          } else {
+            somme_B_diff <- sum(B_diff[1:(min_index - 1)])  # Somme jusqu'à l'élément avant min_index
+          }
+          dist_clusters[cluster_i, cluster_j] <- (W_init - somme_B_diff)/W_init
+        }
+      }
+    }
+
+    # Création des indices pour remplir la matrice de distance
+    indices <- expand.grid(cluster_i = rnc, cluster_j = rnc)
+
+    # Remplissage de la matrice de distance
+    for (k in seq_len(nrow(indices))) {
+      i_set <- clus_indiv_unik[[indices$cluster_i[k]]]
+      j_set <- clus_indiv_unik[[indices$cluster_j[k]]]
+      dist[i_set, j_set] <- dist_clusters[indices$cluster_i[k], indices$cluster_j[k]]
+    }
+
+    sim <- 1 - absent - dist
+
+  } else if(distance == "co-clustering"){
+    #Initialisation des matrices de stockages
+    sim <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
+
+    #Calcul des proportions d'inertie totale expliquées par l'inertie inter-cluster
+    ratios <- B_diff[1:(length(B_diff)-1)]/B_diff[2:length(B_diff)]
+    indice_max <- which.max(ratios)
+
+    nombre_clusters <- indice_max +2 #pour permettre calcul du bon ratio
+    tree_opti <- cutreediv(tree_max, K = nombre_clusters)
+
+    #We specify each unique individual for each of our clusters
+    clus_indiv_unik <- sapply(tree_opti$clusters,
+                              function(x){
+                                unique(sapply(strsplit(x, ".", fixed = TRUE), "[", 1))
+                              }
+    )
+
+    # Co-clustering occurences in each cluster
+    for(k in 1:nombre_clusters){
+      for(i in clus_indiv_unik[k]){
+        for(j in clus_indiv_unik[k]){
+          sim[i,j] <- 1
+
+        }
+      }
+
+    }
+
+    dist <-  1 - absent - sim
+  }
 
   # Returns the list of 3 matrices
-  out <- list("occu" = occu, "diss" = diss, "absent" = absent)
+  out <- list("sim" = sim, "dist" = dist, "absent" = absent,
+              "distance"=distance)
   return(out)
-
 }
