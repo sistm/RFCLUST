@@ -14,10 +14,10 @@ summary.rfclust <- function(object, ...){
   ntrees <- length(object)
 
   matrices_sim <- lapply(object,'[[',1)
-  sum_sim <- Reduce('+', matrices_asso)
+  sum_sim <- Reduce('+', matrices_sim)
 
   matrices_dist <- lapply(object,'[[',2)
-  sum_dist <- Reduce('+', matrices_diss)
+  sum_dist <- Reduce('+', matrices_dist)
 
   matrices_absent <- lapply(forest,'[[',3)
   sum_absent <- Reduce('+', matrices_absent)
