@@ -68,7 +68,8 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
           list_inter <- tree_opti[["height"]][[cluster_i]][tree_opti[["height"]][[cluster_i]] %in% tree_opti[["height"]][[cluster_j]]]
           min_val <- min(list_inter)
           min_index <- which(B_diff == min_val)[1]
-          dist_clusters[cluster_i, cluster_j] <- sum(B_diff[min_index:(nombre_clusters - 1)])/sum(B_diff[1:(nombre_clusters - 1)])
+          #dist_clusters[cluster_i, cluster_j] <- sum(B_diff[min_index:(nombre_clusters - 1)])/sum(B_diff[1:(nombre_clusters - 1)])
+          dist_clusters[cluster_i, cluster_j] <- sum(B_diff[min_index:(nombre_clusters - 1)])
         }
       }
     }
