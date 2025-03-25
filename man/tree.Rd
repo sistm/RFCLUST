@@ -9,7 +9,7 @@ tree(X, mtry = ncol(X), distance = c("co-clustering"))
 \arguments{
 \item{X}{data.frame of input data}
 
-\item{mtry}{number of variables selected at the beginning (hopefully later at each nodes)}
+\item{mtry}{number of variables selected at each tree node}
 
 \item{distance}{a character string, either "co-clustering" or "inertia"}
 }
