@@ -36,7 +36,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     dist <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
 
     #Création de l'abre avec la profondeur maximale
-    tree_opti <- divclust(X_ib, mtry)
+    tree_opti <- divclust(X_ib, K = NULL, mtry)
     B_diff <- tree_opti$height
     nombre_clusters <- tree_opti$kmax
 
@@ -81,7 +81,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     #Initialisation des matrices de stockages
     sim <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
     
-    tree_max <- divclust(X_ib, mtry)
+    tree_max <- divclust(X_ib, K = NULL, mtry)
     
     #Extraction de kmax et de la variation d'inertie
     tree_kmax <- tree_max$kmax
