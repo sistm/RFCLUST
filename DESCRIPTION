@@ -1,6 +1,6 @@
 Package: RFCLUST
 Title: Random Forests of Divclust Trees for Unsupervised Clustering
-Version: 0.0.0.5
+Version: 0.0.0.6
 Authors@R: 
     c(person("Alarig", "Vigneras", email = "alarig.vigneras@gmail.com", role = c("aut")),
     person("Robin", "Genuer", email = "robin.genuer@u-bordeaux.fr", role = c("aut")),
