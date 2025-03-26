@@ -15,14 +15,13 @@ rfclust(
 \arguments{
 \item{X}{a data.frame to be clustered}
 
-\item{ntrees}{number of \code{divlust} tress. Default is \code{500}.}
+\item{ntrees}{number of \code{divlust} trees. Default is \code{500}.}
 
-\item{mtry}{Nombre de variables prises en comptes.}
+\item{mtry}{number of variables selected at each \code{divlust} tree node.
+Default is \code{ncol(X)}.}
 
 \item{ncores}{number of cpus to parallelize over. Default is
 \code{parallel::detectCores()-1}.}
-
-\item{K}{Nombre de cluster attendu par divclust.}
 }
 \value{
 a list of length \code{n_trees}, each elements containing 3 matrices.
