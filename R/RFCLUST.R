@@ -3,9 +3,9 @@
 #' main wrapper
 #'
 #' @param X a data.frame to be clustered
-#' @param ntrees number of \code{divlust} tress. Default is \code{500}.
-#' @param K Nombre de cluster attendu par divclust.
-#' @param mtry Nombre de variables prises en comptes.
+#' @param ntrees number of \code{divlust} trees. Default is \code{500}.
+#' @param mtry number of variables selected at each \code{divlust} tree node. 
+#' Default is \code{ncol(X)}.
 #' @param ncores number of cpus to parallelize over. Default is
 #' \code{parallel::detectCores()-1}.
 #'
