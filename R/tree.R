@@ -38,6 +38,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     #Création de l'abre avec la profondeur maximale
     tree_opti <- divclust(X_ib, mtry)
     B_diff <- tree_opti$height
+    nombre_clusters <- tree_opti$kmax
 
     #Extraction des différents clusters
     clus_indiv_unik <- sapply(tree_opti$clusters,
