@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/Alar0g/RFCLUST/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Alar0g/RFCLUST/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/sistm/RFCLUST/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sistm/RFCLUST/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `RFCLUST` performs Random Forests of Divisive Monothetic
@@ -23,13 +23,13 @@ first be installed with the following:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("Alar0g/divclust")
+remotes::install_github("sistm/divclust")
 ```
 
 Then, `RFCLUST` can be installed with:
 
 ``` r
-remotes::install_github("Alar0g/RFCLUST")
+remotes::install_github("sistm/RFCLUST")
 ```
 
 ## Example
