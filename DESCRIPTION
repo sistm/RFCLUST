@@ -25,7 +25,8 @@ Imports:
     progress,
     tibble
 Remotes: 
-    Alar0g/divclust
+    sistm/divclust
 Suggests: 
     palmerpenguins
 LazyData: true
+
