@@ -55,5 +55,6 @@ resume <- summary(forest_clust)
 plot(resume)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk.png" width="100%" />
+
 
