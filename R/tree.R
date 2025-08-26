@@ -35,7 +35,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     #Initialisation des matrices de stockages
     dist <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
 
-    #Création de l'abre avec la profondeur maximale
+    #Création de l'abre avec la profondeur kmax/2
     tree_kmax <- length(rn[unique(index_boot)])
     nombre_clusters <- floor(tree_kmax/2)
     tree_opti <- divclust(X_ib, K = nombre_clusters, mtry)
@@ -81,19 +81,25 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
   } else if(distance == "co-clustering"){
     #Initialisation des matrices de stockages
     sim <- matrix(0, nrow(X), nrow(X), dimnames = list(rn, rn))
-    
-    tree_max <- divclust(X_ib, K = NULL, mtry)
+
+    #Création de l'abre avec la profondeur kmax/2
+    tree_kmax <- length(rn[unique(index_boot)])
+    nombre_clusters_init <- floor(tree_kmax/2)
+    tree_init <- divclust(X_ib, K = nombre_clusters_init, mtry)
+    B_diff <- tree_init$height
+    #tree_max <- divclust(X_ib, K = NULL, mtry)
     
     #Extraction de kmax et de la variation d'inertie
-    tree_kmax <- tree_max$kmax
-    B_diff <- tree_max$height #car B(k+1) - B(k) = W(k) - W(k+1)
+    #tree_kmax <- tree_max$kmax
+    #B_diff <- tree_max$height #car B(k+1) - B(k) = W(k) - W(k+1)
 
     #Calcul des proportions d'inertie totale expliquées par l'inertie inter-cluster
     ratios <- B_diff[1:(length(B_diff)-1)]/B_diff[2:length(B_diff)]
     indice_max <- which.max(ratios)
 
     nombre_clusters <- indice_max +2 #pour permettre calcul du bon ratio
-    tree_opti <- cutreediv(tree_max, K = nombre_clusters)
+    #tree_opti <- cutreediv(tree_max, K = nombre_clusters)
+    tree_opti <- cutreediv(tree_init, K = nombre_clusters)
 
     #We specify each unique individual for each of our clusters
     clus_indiv_unik <- sapply(tree_opti$clusters,
@@ -121,3 +127,4 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
               "distance"=distance)
   return(out)
 }
+
