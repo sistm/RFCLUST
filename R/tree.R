@@ -85,15 +85,15 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     #Création de l'abre avec la profondeur kmax/2
     tree_kmax <- length(rn[unique(index_boot)])
     nombre_clusters_init <- floor(tree_kmax/2)
-    
+
     #tree_init <- divclust(X_ib, K = nombre_clusters_init, mtry)
-    #B_diff <- tree_init$height
+    #B_diff <- tree_init$height #car B(k+1) - B(k) = W(k) - W(k+1)
 
     tree_opti <- divclust(X_ib, K = nombre_clusters_init, mtry)
     
+    #Décommenter si on veut finalement faire des arbres max
     #tree_max <- divclust(X_ib, K = NULL, mtry)
-    
-    #Extraction de kmax et de la variation d'inertie
+      #Extraction de kmax et de la variation d'inertie
     #tree_kmax <- tree_max$kmax
     #B_diff <- tree_max$height #car B(k+1) - B(k) = W(k) - W(k+1)
 
@@ -113,7 +113,8 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     )
 
     # Co-clustering occurences in each cluster
-    for(k in 1:nombre_clusters){
+    #for(k in 1:nombre_clusters){
+    for(k in 1:nombre_clusters_init){
       for(i in clus_indiv_unik[k]){
         for(j in clus_indiv_unik[k]){
           sim[i,j] <- 1
@@ -131,5 +132,6 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
               "distance"=distance)
   return(out)
 }
+
 
 
