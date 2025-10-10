@@ -6,6 +6,7 @@
 #' @param ntrees number of \code{divlust} trees. Default is \code{500}.
 #' @param mtry number of variables selected at each \code{divlust} tree node. 
 #' Default is \code{ncol(X)}.
+#' @param distance a character string, either "co-clustering" or "inertia"
 #' @param ncores number of cpus to parallelize over. Default is
 #' \code{parallel::detectCores()-1}.
 #'

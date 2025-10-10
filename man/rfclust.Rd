@@ -20,6 +20,8 @@ rfclust(
 \item{mtry}{number of variables selected at each \code{divlust} tree node.
 Default is \code{ncol(X)}.}
 
+\item{distance}{a character string, either "co-clustering" or "inertia"}
+
 \item{ncores}{number of cpus to parallelize over. Default is
 \code{parallel::detectCores()-1}.}
 }
