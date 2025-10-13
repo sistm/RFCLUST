@@ -40,7 +40,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     nombre_clusters <- floor(tree_kmax/2)
     tree_opti <- divclust(X_ib, K = nombre_clusters, mtry)
     B_diff <- tree_opti$height
-    sum_importance <- tree_opti$sum_importance
+    sum_MDI_importance <- tree_opti$sum_MDI_importance
   
     #Extraction des différents clusters
     clus_indiv_unik <- sapply(tree_opti$clusters,
@@ -103,7 +103,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     nombre_clusters <- indice_max +2 #pour permettre calcul du bon ratio
     #tree_opti <- cutreediv(tree_max, K = nombre_clusters)
     tree_opti <- cutreediv(tree_init, K = nombre_clusters)
-    sum_importance <- tree_opti$sum_importance
+    sum_MDI_importance <- tree_opti$sum_MDI_importance
 
     #We specify each unique individual for each of our clusters
     clus_indiv_unik <- sapply(tree_opti$clusters,
@@ -129,7 +129,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
 
   # Returns the list of 3 matrices
   out <- list("sim" = sim, "dist" = dist, "absent" = absent,
-              "distance"=distance, "importance" = sum_importance)
+              "distance"=distance, "MDI_importance" = sum_MDI_importance)
   return(out)
 }
 

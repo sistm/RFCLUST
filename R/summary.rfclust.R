@@ -22,7 +22,7 @@ summary.rfclust <- function(object, ...){
   matrices_absent <- lapply(object,'[[',3)
   sum_absent <- Reduce('+', matrices_absent)
   
-  importance <- lapply(object, '[[', 5)
+  MDI_importance <- lapply(object, '[[', 5)
 
   if(object[[1]]$distance == "co-clustering"){
 
@@ -42,19 +42,19 @@ summary.rfclust <- function(object, ...){
   distance_matrix[is.na(distance_matrix)] <- 0
   
   #Importance des variables
-  importance_var <- list()
-  for (j in 1:length(importance)){
-    for (var in names(importance[[j]])){
-      if (is.null(importance_var[[var]])){
-        importance_var[[var]] <- 0
+  MDI_importance_var <- list()
+  for (j in 1:length(MDI_importance)){
+    for (var in names(MDI_importance[[j]])){
+      if (is.null(MDI_importance_var[[var]])){
+        MDI_importance_var[[var]] <- 0
       }
-      importance_var[[var]]  <- importance_var[[var]] + importance[[j]][[var]]
+      MDI_importance_var[[var]]  <- MDI_importance_var[[var]] + MDI_importance[[j]][[var]]
     }
   }
   
-  importance_moy_var <- lapply(importance_var, function(x) x/ntrees)
+  MDI_importance_moy_var <- lapply(MDI_importance_var, function(x) x/ntrees)
   
-  output_summary <- list("distance_matrix" = distance_matrix, "importance_variables" = importance_moy_var)
+  output_summary <- list("distance_matrix" = distance_matrix, "MDI_importance_variables" = MDI_importance_moy_var)
   class(output_summary) <- "rfclust.summary"
   return(output_summary)
 
