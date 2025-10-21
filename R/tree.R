@@ -7,13 +7,14 @@
 #'
 #' @param X data.frame of input data
 #' @param mtry number of variables selected at each tree node
-#' @param distance a character string, either "co-clustering" or "inertia"
+#' @param distance a character string, either "co-clustering" or "inertia".
+#' @param weighting Logical (TRUE or FALSE). If TRUE, node inertia is weighted in the calculation of variable importance.
 #' @return dissimilarity matrix and oob matrix
 #' @import dplyr pbapply divclust progress
 #' @export
 
 
-tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
+tree <- function(X, mtry = ncol(X), distance=c("co-clustering"), weighting = FALSE){
 
 
   stopifnot(distance %in% c("co-clustering", "inertia"))
@@ -38,7 +39,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     #Création de l'abre avec la profondeur kmax/2
     tree_kmax <- length(rn[unique(index_boot)])
     nombre_clusters <- floor(tree_kmax/2)
-    tree_opti <- divclust(X_ib, K = nombre_clusters, mtry)
+    tree_opti <- divclust(X_ib, K = nombre_clusters, mtry, weighting)
     B_diff <- tree_opti$height
     sum_MDI_importance <- tree_opti$sum_MDI_importance
   
@@ -87,7 +88,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
     tree_kmax <- length(rn[unique(index_boot)])
     nombre_clusters_init <- floor(tree_kmax/2)
 
-    tree_init <- divclust(X_ib, K = nombre_clusters_init, mtry)
+    tree_init <- divclust(X_ib, K = nombre_clusters_init, mtry, weighting)
     B_diff <- tree_init$height #car B(k+1) - B(k) = W(k) - W(k+1)
     
     #Décommenter si on veut finalement faire des arbres max
@@ -102,7 +103,7 @@ tree <- function(X, mtry = ncol(X), distance=c("co-clustering")){
 
     nombre_clusters <- indice_max +2 #pour permettre calcul du bon ratio
     #tree_opti <- cutreediv(tree_max, K = nombre_clusters)
-    tree_opti <- cutreediv(tree_init, K = nombre_clusters)
+    tree_opti <- cutreediv(tree_init, K = nombre_clusters, weighting)
     sum_MDI_importance <- tree_opti$sum_MDI_importance
 
     #We specify each unique individual for each of our clusters
