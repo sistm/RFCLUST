@@ -9,6 +9,7 @@ rfclust(
   ntrees = 500,
   mtry = ncol(X),
   distance = "co-clustering",
+  weighting = FALSE,
   ncores = parallel::detectCores() - 1
 )
 }
@@ -20,7 +21,9 @@ rfclust(
 \item{mtry}{number of variables selected at each \code{divlust} tree node.
 Default is \code{ncol(X)}.}
 
-\item{distance}{a character string, either "co-clustering" or "inertia"}
+\item{distance}{a character string, either "co-clustering" or "inertia".}
+
+\item{weighting}{Logical (TRUE or FALSE). If TRUE, node inertia is weighted in the calculation of variable importance.}
 
 \item{ncores}{number of cpus to parallelize over. Default is
 \code{parallel::detectCores()-1}.}

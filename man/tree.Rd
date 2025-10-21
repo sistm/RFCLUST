@@ -4,14 +4,16 @@
 \alias{tree}
 \title{Computes a divclust tree}
 \usage{
-tree(X, mtry = ncol(X), distance = c("co-clustering"))
+tree(X, mtry = ncol(X), distance = c("co-clustering"), weighting = FALSE)
 }
 \arguments{
 \item{X}{data.frame of input data}
 
 \item{mtry}{number of variables selected at each tree node}
 
-\item{distance}{a character string, either "co-clustering" or "inertia"}
+\item{distance}{a character string, either "co-clustering" or "inertia".}
+
+\item{weighting}{Logical (TRUE or FALSE). If TRUE, node inertia is weighted in the calculation of variable importance.}
 }
 \value{
 dissimilarity matrix and oob matrix
